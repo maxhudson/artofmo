@@ -1,0 +1,21 @@
+{
+  "overrides": [
+    {
+      "files": ["**/*.js"],
+      "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+      },
+      "rules": {
+        "no-unused-vars": ["warn", {"vars": "local"}],
+        "no-console": "warn",
+        "no-extra-semi": "warn",
+        "eqeqeq": ["error"],
+        "brace-style": ["warn", "stroustrup"],
+        "camelcase": ["warn", {"properties": "never"}],
+        "semi": ["warn", "always"],
+        "prefer-template": "warn"
+      }
+    }
+  ]
+}

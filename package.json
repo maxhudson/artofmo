@@ -1,0 +1,25 @@
+{
+  "name": "artofmo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxhudson/artofmo.git"
+  },
+  "author": "Max Hudson",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.11"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "babel-loader": "^8.0.2",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.1"
+  }
+}
