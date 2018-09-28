@@ -11,7 +11,7 @@ export default function basic({
   renderScale=4,
   backgroundColor='#ffffff'
 }) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     var onDomReady = () => {
       var _container = document.getElementById(containerId);
 
@@ -24,9 +24,10 @@ export default function basic({
       var _render = _container.querySelector('.mo-render');
       var _renderPrint = _container.querySelector('.mo-render-print');
       var _upperCanvas = _container.querySelector('.upper-canvas');
+      var _canvasContainer = _container.querySelector('.mo-canvas-container');
 
       var canvasView = new CanvasView({
-        _container: _container,
+        _container: _canvasContainer,
         size,
         canvasOptions: {backgroundColor}
       });
@@ -34,21 +35,21 @@ export default function basic({
       if (overlay) {
         var overlayObject;
 
-        images.overlay = 'https://i.imgur.com/aUVVjL1.jpg';
+        images.overlay = 'https://i.postimg.cc/jjc1KWX2/overlay-01.png';
 
         _renderPrint.addEventListener('click', () => {
           if (overlayObject.canvasView) canvasView.remove({object: overlayObject});
 
           canvasView.set({scale: renderScale});
 
-          _upperCanvas.remove();
+          _upperCanvas && _upperCanvas.remove();
         });
       }
 
-      _render.addEventListener('click', event => {
+      _render.addEventListener('click', () => {
         canvasView.set({scale: renderScale});
 
-        _upperCanvas.remove();
+        _upperCanvas && _upperCanvas.remove();
       });
 
       FabricCanvasObject.loadImages(images).then(images => {

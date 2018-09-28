@@ -1,3 +1,5 @@
+import evenlyDistributedPositions from '../generators/evenly-distributed-positions.js';
+
 export default {
-  //a: () => console.log(1)
+  evenlyDistributedPositions
 };
