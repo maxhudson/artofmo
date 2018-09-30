@@ -1,8 +1,50 @@
-import mathTrig from '../lib/math/trig.js';
+import _ from 'lodash';
+import trig from '../util/trig';
 
-var lib = {
-  rand: (size=1, factor=0) => Math.random() * Math.abs(size) + (factor ? Math.abs(size) * factor : 0),
-  randInt: (factor) => _.floor(mo.rand() * factor),
+var util = {
+  rand(size=1, factor=0) {
+    return Math.random() * Math.abs(size) + (factor ? Math.abs(size) * factor : 0);
+  },
+
+  randInt(factor) {
+    return _.floor(util.rand() * factor);
+  },
+
+  arrayArgsOrVariadicArgsToArray(args, ...variadicArgs) {
+    if (!Array.isArray(args)) {
+      args = [args, ...variadicArgs];
+    }
+
+    return args;
+  },
+
+  //sum(1, 2) or sum([1, 2]);
+  //sum(1, 2) or sum({a: 1}, {a: 2})
+  sum(...args) {
+    var values = util.arrayArgsOrVariadicArgsToArray(args);
+
+    if (typeof(values[0]) === 'object') {
+      var sum = _.reduce(values, (sum, object) => {
+        _.forEach(object, (value, key) => sum[key] = (sum[key] || 0) + value);
+
+        return sum;
+      }, {});
+    }
+    else {
+      var sum = _.sum(values);
+    }
+
+    return sum;
+  },
+
+  min(...args) {
+    return _.min(util.arrayArgsOrVariadicArgsToArray(args));
+  },
+
+  max(...args) {
+    return _.max(util.arrayArgsOrVariadicArgsToArray(args));
+  },
+
   getImageData({url, size}) {
     return new Promise((resolve) => {
       FabricCanvasObject.loadImages({image: url}).then(({image}) => {
@@ -32,6 +74,7 @@ var lib = {
       });
     });
   },
+
   canvasSizeFor({dpi, feet, inches, retina=false}) {
     if (feet) inches = {width: feet.width * 12, height: feet.height * 12};
 
@@ -41,7 +84,8 @@ var lib = {
 
     return size;
   },
-  math: {trig: mathTrig}
+
+  trig
 };
 
-export default lib;
+export default util;

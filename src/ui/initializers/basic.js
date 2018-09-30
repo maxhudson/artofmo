@@ -1,6 +1,6 @@
 import FabricCanvasObject from '../../canvas/fabric/object.js';
 import CanvasView from '../../canvas/view.js';
-import lib from '../../core/lib';
+import util from '../../core/util';
 import _ from 'lodash';
 
 export default function basic({
@@ -69,7 +69,7 @@ export default function basic({
           canvasView, images, size,
           render: () => canvasView.render({layout: true}),
           offset: {x: 0, y: 0},
-          ..._.pick(lib, ['rand', 'randInt'])
+          ..._.pick(util, ['rand', 'randInt', 'sum', 'min', 'max'])
         });
       }, null, 'Anonymous');
     };
