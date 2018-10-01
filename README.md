@@ -1,6 +1,8 @@
 ### artofmo
 
-#### Warning
+Recommended start here: [artofmo-examples](https://github.com/maxhudson/artofmo-examples)
+
+#### WARNING
 This package is very rough and in early stages - do not expect stability.
 
 I'll be versioning it, so you can avoid breaking scripts that work by putting them in versioned folders with the correct version of node installed.
@@ -10,11 +12,11 @@ If you have questions, DM me on instagram [@artofmo](https://instagram.com/artof
 #### Very rough instructions (temporary and will improve soon)
 
 Currently I'm using this package by:
-1. creating a single html file (like `main.html`)
-1. creating a javascript file for each drawing I do (like `drawing1.js`)
-1. installing the package in that directory (`npm install artofmo`)
-1. running a local server in the directory those files live in ([Webserver for Chrome](https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb?hl=en))
-1. visiting a url like `http://localhost:8887/main.html?file=drawing1`
+1. Creating a single html file (like `main.html`)
+1. Creating a javascript file for each drawing I do (like `drawing1.js`)
+1. Installing the package in that directory (`npm install artofmo`)
+1. Running a local server in the directory those files live in ([Webserver for Chrome](https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb?hl=en))
+1. Visiting a url like `http://localhost:8887/main.html?file=drawing1`
 
 My directory ends up looking like:
 
