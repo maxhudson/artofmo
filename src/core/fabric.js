@@ -1,3 +1,5 @@
+
+
 /* build: `node build.js modules=ALL exclude=gestures,accessors minifier=uglifyjs` */
 /*! Fabric.js Copyright 2008-2015, Printio (Juriy Zaytsev, Maxim Chernyak) */
 
@@ -7134,7 +7136,11 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
      */
     renderAll: function () {
       var canvasToDrawOn = this.contextContainer;
-      this.renderCanvas(canvasToDrawOn, this._objects);
+      var objsToRender = this._objects.sort(function(a, b) {
+        return (a.zIndex || 0) - (b.zIndex || 0);
+      });
+
+      this.renderCanvas(canvasToDrawOn, objsToRender);
       return this;
     },
 
@@ -9219,9 +9225,9 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
         objsToRender = this._objects;
       }
 
-      objsToRender = _.sortBy(objsToRender, function(object) {
-        return object.zIndex || 0;
-      });
+      objsToRender = objsToRender.sort(function(a, b) {
+        return (a.zIndex || 0) - (b.zIndex || 0);
+      }).reverse();
 
       return objsToRender;
     },
@@ -10060,8 +10066,8 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
      * @private
      */
     _searchPossibleTargets: function(objects, pointer) {
-      objects = _.sortBy(objects, function(object) {
-        return object.zIndex || 0;
+      var objects = objects.sort(function(a, b) {
+        return (a.zIndex || 0) - (b.zIndex || 0);
       });
 
       // Cache all targets where their bounding box contains point.

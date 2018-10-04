@@ -6,6 +6,7 @@ export default class CanvasObject extends Class {
       position: {x: 0, y: 0},
       size: {width: 0, height: 0},
       rotation: 0,
+      zIndex: 0,
       origin: {x: 'center', y: 'center'},
       fill: '',
       stroke: ''

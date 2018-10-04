@@ -1,7 +1,7 @@
 //import _ from 'lodash';
 //import {} from '../../core/util.js';
 
-export default function spiral({ringCount=3, radius=1, spacing=1, angle=0, a=0.2, b=5, count=500}) {
+export default function spiralFor({ringCount=3, radius=1, spacing=1, angle=0, a=0.2, b=5, count=500}) {
   var positions = [];
   //var a = 0.2, b = 5; //correlate with radius
 

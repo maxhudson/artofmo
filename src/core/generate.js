@@ -1,7 +1,10 @@
-import evenlyDistributed from '../generators/positions/evenly-distributed.js';
-import plantSpiral from '../generators/positions/plant-spiral.js';
-import spiral from '../generators/positions/spiral.js';
+import evenlyDistributedFor from '../generators/positions/evenly-distributed-for.js';
+//import plantSpiral from '../generators/positions/plant-spiral.js';
+import spiralFor from '../generators/positions/spiral-for.js';
+
+import forCurveThrough from '../generators/path-commands/for-curve-through.js';
 
 export default {
-  positions: {evenlyDistributed, plantSpiral, spiral}
+  positions: {evenlyDistributedFor, /*plantSpiral, */spiralFor},
+  pathCommands: {forCurveThrough}
 };

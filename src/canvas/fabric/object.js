@@ -1,5 +1,6 @@
 import CanvasObject from '../object.js';
 import {fabric} from '../../core/fabric.js';
+//import {sum} from '../../core/util';
 
 export default class FabricCanvasObject extends CanvasObject {
   constructor(props) {
@@ -12,10 +13,16 @@ export default class FabricCanvasObject extends CanvasObject {
       var shapeFabricClassMap = {
         rect: fabric.Rect,
         polyline: fabric.Polyline,
+        path: fabric.Path,
         circle: fabric.Circle
       };
 
-      this.fabricObject = new shapeFabricClassMap[this.props.shape](this.props.points || []);
+      var defaultArg;
+
+      if (this.props.shape === 'polyline') defaultArg = this.props.points || [];
+      if (this.props.shape === 'path') defaultArg = '';
+
+      this.fabricObject = new shapeFabricClassMap[this.props.shape](defaultArg);
     }
     else if (this.props.type === 'image') {
       this.fabricObject = new fabric.Image(this.props.image);
@@ -51,15 +58,17 @@ export default class FabricCanvasObject extends CanvasObject {
   layout() {
     super.layout();
 
+    var scale = this.scale;
     var props = {
       left: this.canvasView.offset.x + this.props.position.x * this.scale,
       top: this.canvasView.offset.y + this.props.position.y * this.scale,
       angle: this.props.rotation,
       originX: this.props.origin.x,
       originY: this.props.origin.y,
+      strokeWidth: 1
     };
 
-    _.extend(props, _.pick(this.props, ['zIndex', 'opacity', 'fill', 'stroke', 'radius', 'strokeWidth']));
+    _.extend(props, _.pick(this.props, ['zIndex', 'opacity', 'fill', 'stroke', 'radius', 'strokeWidth', 'rx', 'ry']));
 
     if (this.props.type === 'image') {
       props.scaleX = (this.props.size.width * this.scale) / this.fabricObject.width;
@@ -75,16 +84,57 @@ export default class FabricCanvasObject extends CanvasObject {
         this.fabricObject.applyFilters();
       }
     }
+    else if (this.props.type === 'shape') {
+      if (_.includes(['rect'], this.props.shape)) {
+        _.extend(props, this.props.size);
+      }
 
-    if (this.props.type === 'shape' && _.includes(['rect'], this.props.shape)) {
-      _.extend(props, this.props.size);
+      if (this.props.shape === 'path') {
+        props.path = this.props.path || this.pathArrayFrom({commands: this.props.commands});
+        props.width = 10;
+        props.height = 10;
+      }
+      else if (this.props.shape === 'polyline') {
+        props.points = _.map(this.props.points || [], point => _.mapValues(point, p => p * scale));
+      }
     }
 
-    var scalePropKeys = ['radius', 'width', 'height'];
+    var scalePropKeys = ['radius', 'width', 'height', 'rx', 'ry', 'strokeWidth'];
 
-    _.forEach(_.pick(props, scalePropKeys), (prop, key) => props[key] = prop * this.scale);
+    _.forEach(_.pick(props, scalePropKeys), (prop, key) => props[key] = prop * scale);
 
     this.fabricObject.set(props);
+
+    if (this.props.type === 'polyline' && props.points) {
+      this.fabricObject._calcDimensions();
+      this.fabricObject.pathOffset = {x: this.fabricObject.width / 2, y: this.fabricObject.height / 2};
+    }
+
+    this.fabricObject.setCoords();
+  }
+
+  pathArrayFrom({commands}) {
+    var pathArray = [];
+    var scale = this.scale;
+
+    commands.forEach(({quadratic, point, curvePoint}, c) => {
+      point = _.mapValues(point, p => p * scale);
+
+      if (quadratic) {
+        curvePoint = _.mapValues(curvePoint, p => p * scale);
+
+        pathArray.push(['Q', point.x, point.y, curvePoint.x, curvePoint.y]);
+      }
+      else {
+        pathArray.push([c === 0 ? 'M' : 'L', point.x, point.y]);
+      }
+    });
+
+    if (this.props.closed) {
+      pathArray.push(['Z']);
+    }
+
+    return pathArray;
   }
 
   static loadImages(imageUrls) {

@@ -1,4 +1,4 @@
-export default function evenlyDistributed({precision=0.01, spacing=1, count=5, scale=1, fx}) {
+export default function evenlyDistributedFor({/*path, */precision=0.01, spacing=1, count=5, scale=1, fx}) {
   var dx = precision, s = spacing, x = 0, positions = [];
 
   while (positions.length < count) {
