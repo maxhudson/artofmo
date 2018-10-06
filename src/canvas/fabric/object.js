@@ -37,8 +37,6 @@ export default class FabricCanvasObject extends CanvasObject {
     if (props.diameter) props.radius = props.diameter / 2;
 
     super.set(props);
-
-    //this.fabricObject.set();
   }
 
   addToCanvasView(canvasView) {
@@ -104,6 +102,16 @@ export default class FabricCanvasObject extends CanvasObject {
     _.forEach(_.pick(props, scalePropKeys), (prop, key) => props[key] = prop * scale);
 
     this.fabricObject.set(props);
+    
+    if (this.props.shadow) {
+      var scalePropKeys = ['offsetX', 'offsetY', 'blur'];
+
+      var shadow = _.clone(this.props.shadow);
+
+      _.forEach(_.pick(shadow, scalePropKeys), (prop, key) => shadow[key] = prop * scale);
+
+      this.fabricObject.setShadow(shadow);
+    }
 
     if (this.props.type === 'polyline' && props.points) {
       this.fabricObject._calcDimensions();
@@ -117,13 +125,18 @@ export default class FabricCanvasObject extends CanvasObject {
     var pathArray = [];
     var scale = this.scale;
 
-    commands.forEach(({quadratic, point, curvePoint}, c) => {
+    commands.forEach(({quadratic, cubic, point, ...command}, c) => {
       point = _.mapValues(point, p => p * scale);
 
       if (quadratic) {
-        curvePoint = _.mapValues(curvePoint, p => p * scale);
+        curvePoint = _.mapValues(command.curvePoint, p => p * scale);
 
         pathArray.push(['Q', point.x, point.y, curvePoint.x, curvePoint.y]);
+      }
+      else if (cubic) {
+        var {start, end} = _.mapValues(command.controlPoints, point => _.mapValues(point, p => p * scale));
+
+        pathArray.push(['C', start.x, start.y, end.x, end.y, point.x, point.y]);
       }
       else {
         pathArray.push([c === 0 ? 'M' : 'L', point.x, point.y]);

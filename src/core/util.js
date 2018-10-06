@@ -10,6 +10,13 @@ var util = {
     return _.floor(util.rand() * factor);
   },
 
+  randPoint(size, factor) {
+    return {
+      x: util.rand(_.isObject(size) ? size.x : size, factor),
+      y: util.rand(_.isObject(size) ? size.y : size, factor)
+    };
+  },
+
   arrayArgsOrVariadicArgsToArray(args, ...variadicArgs) {
     if (!Array.isArray(args)) {
       args = [args, ...variadicArgs];
@@ -35,6 +42,55 @@ var util = {
     }
 
     return sum;
+  },
+
+  difference(...args) {
+    var values = util.arrayArgsOrVariadicArgsToArray(args);
+
+    if (typeof(values[0]) === 'object') {
+      var sum = _.reduce(values, (sum, object) => {
+        _.forEach(object, (value, key) => sum[key] = (sum[key] === undefined ? value : sum[key] - value));
+
+        return sum;
+      }, {});
+    }
+    else {
+      values = values.map((value, v) => v === 0 ? value : -value);
+
+      var sum = _.sum(values);
+    }
+
+    return sum;
+  },
+
+  /**
+   * multiply values (numbers or objects or both) by each other to reduce
+   * @param  {Array|...<Object|Number|both>} values
+   * @return {Object|Number}        Reduced Object
+   */
+  product(...args) {
+    var values = util.arrayArgsOrVariadicArgsToArray(args);
+    var hasObjects = _.some(values, value => _.isObject(value));
+
+    return _.reduce(values, (product, value) => {
+      if (hasObjects) {
+        if (_.isObject(value)) {
+          _.forEach(value, (value, key) => {
+            if (_.isNil(product[key])) product[key] = 1;
+
+            product[key] *= value;
+          });
+        }
+        else {
+          _.forEach(product, (pv, key) => product[key] *= value);
+        }
+      }
+      else {
+        product *= value;
+      }
+
+      return product;
+    }, hasObjects ? {} : 1);
   },
 
   min(...args) {

@@ -69,7 +69,7 @@ export default function basic({
           canvasView, images, size,
           render: () => canvasView.render({layout: true}),
           offset: {x: 0, y: 0},
-          ..._.pick(util, ['rand', 'randInt', 'sum', 'min', 'max'])
+          ..._.pick(util, ['rand', 'randInt', 'randPoint', 'sum', 'difference', 'product', 'min', 'max'])
         });
       }, null, 'Anonymous');
     };
